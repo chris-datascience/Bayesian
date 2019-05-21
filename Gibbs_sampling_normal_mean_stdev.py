@@ -9,7 +9,10 @@ Created on Sun Feb 10 12:38:45 2019
 """
     Modelling relative volume growth using Gibbs Sampling: 
     1. Bayesian inference on normal distribution with unknown mean and st.dev
-    mu is Normal(mu, s2), stdev is InverseGamme(a,b)
+    mu is Normal(mu, s2), stdev is InverseGamma(a,b)
+    
+    Implementation is manual Gibbs. Could be good to compare to PyMC3.
+    
     Source:
         https://www4.stat.ncsu.edu/~reich/ABA/code/NN2
         [translated from R]
