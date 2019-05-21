@@ -22,10 +22,10 @@ drug = [101,100,102,104,102,97,105,105,98,101,100,123,105,103,100,95,102,106,
 placebo = [99,101,100,101,102,100,97,101,104,101,102,102,100,105,88,101,100,
            104,100,100,100,101,102,103,97,101,101,100,101,99,101,100,100,
            101,100,99,101,100,102,99,100,99]
-y = pd.DataFrame(data=[drug,placebo], columns=['drug','placebo'])
-
+y1 = np.array(drug)
+y2 = np.array(placebo)
+y = pd.DataFrame(dict(value=np.r_[y1, y2], group=np.r_[['drug']*len(drug), ['placebo']*len(placebo)]))
 y.hist('value', by='group');
-
 
 μ_m = y.value.mean()
 μ_s = y.value.std() * 2
@@ -52,7 +52,8 @@ with pm.Model() as model:
     effect_size = pm.Deterministic('effect size',  diff_of_means / np.sqrt((group1_std**2 + group2_std**2) / 2))    
     
     # RUN
-    trace = pm.sample(2000, cores=2)
+    #trace = pm.sample(2000, cores=2)  #  Nota Bene: https://github.com/pymc-devs/pymc3/issues/3388
+    trace = pm.sample(1000, tune=1000, cores=1)
 
 pm.kdeplot(np.random.exponential(30, size=10000), shade=0.5);
 
