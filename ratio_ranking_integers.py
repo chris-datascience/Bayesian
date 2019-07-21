@@ -70,7 +70,7 @@ if __name__=='__main__':
     # [0] Create dataset
     # =============================================================================
     mode = 'all'  # 'random'
-    n = 6
+    n = 4
     N =  n**2
     min_good, max_good = 1, n
     min_bad, max_mad = 1, n
@@ -122,3 +122,20 @@ if __name__=='__main__':
     df_final.sort_values('CN_rank')[['Good','Bad']].plot.bar(figsize=(7,4), stacked=True, width=.75)
     plt.ylabel('count', fontsize=13)
     plt.title('ranking based on CN score', fontsize=15)
+    
+    #  [4] Measure differences
+    # =============================================================================
+    CN_vs_ratio = df_final[['ratio_rank','CN_rank']].sort_values('ratio_rank').copy()
+    CN_vs_ratio['diff'] = CN_vs_ratio['CN_rank'] - CN_vs_ratio['ratio_rank']
+    #CN_diff_mean = CN_vs_ratio['diff'].mean()
+    #CN_diff_std = CN_vs_ratio['diff'].std()
+    print('\nCN versus ratio rank: ', CN_vs_ratio['diff'].sum())
+    print('CN max: ', CN_vs_ratio['diff'].max())
+    print('CN min: ', CN_vs_ratio['diff'].min())
+
+    Bayes_vs_ratio = df_final[['ratio_rank','lpv_rank']].sort_values('lpv_rank').copy()
+    Bayes_vs_ratio['diff'] = Bayes_vs_ratio['lpv_rank'] - Bayes_vs_ratio['ratio_rank']
+    print('\nBayes versus ratio rank: ', Bayes_vs_ratio['diff'].sum())
+    print('Bayes max: ', Bayes_vs_ratio['diff'].max())
+    print('Bayes min: ', Bayes_vs_ratio['diff'].min())
+    
