@@ -75,8 +75,9 @@ def bayesian_model_estimation(T, E):
             logpost += expon(scale=1/lam_range).logpdf(duration)
         else:
             logpost += expon(scale=1/lam_range).logsf(duration)
-    
-    post = np.exp(logpost)
+    # Trick: shift entire log dist. by max.loglikel. before exponentiation to reduce potential underflow:
+    maxlogl = np.max(logpost)
+    post = np.exp(logpost - maxlogl)
     post /= np.sum(post)
     print('\nMean of lambda posterior = {}'.format(np.dot(lam_range, post)))
     

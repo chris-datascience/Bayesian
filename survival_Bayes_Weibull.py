@@ -71,7 +71,7 @@ if __name__=='__main__':
     # =============================================================================
     #     Bayesian model estimate of same Weibull params
     # =============================================================================
-    print('\nBayesian estimates (flat priors):')
+    print('\nBayesian estimates (flat priors):') # to do: apply actual sensible priors
     lam_range = np.linspace(1, 100, 50)
     rho_range = np.linspace(0.1, 6, 30)
     L, R = np.meshgrid(lam_range, rho_range)
@@ -80,7 +80,7 @@ if __name__=='__main__':
     logprior = np.log(prior)
     logprior /= np.sum(logprior)
     
-    # In log dimension (still dangerously small numbers!)
+    # In log dimension (check: still dangerously small numbers?)
     logpost = logprior[:]
     for _,row in df.iterrows():
         for i,rho_ in enumerate(rho_range):
@@ -89,8 +89,8 @@ if __name__=='__main__':
                     logpost[i,j] += np.log(weibull_pdf(row['T'], lambda_, rho_))
                 else:
                     logpost[i,j] += np.log(weibull_survival(row['T'], lambda_, rho_))
-    
-    post = np.exp(logpost)
+    maxlogl = np.max(logpost)
+    post = np.exp(logpost - maxlogl) # shift by max.likel. to reduce underflow
     post /= np.sum(post, axis=(0,1))
 
     # Plot joint post.dist.
